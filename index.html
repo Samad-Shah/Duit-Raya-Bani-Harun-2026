@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Berapa Duit Raya Saya? v1.2</title>
+<title>Berapa Duit Raya Saya?</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lateef:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -660,7 +660,7 @@ function handleSecretTap(e) {
     secretTaps = 0;
     setTimeout(() => {
       const pwd = prompt('🔒 Password admin:');
-      if (pwd === 'admin1234') toggleAdmin();
+      if (pwd === 'admin123') toggleAdmin();
     }, 150);
   } else {
     secretTimer = setTimeout(() => { secretTaps = 0; }, 3000);
@@ -1130,5 +1130,6 @@ function saveConfig() {
   setTimeout(() => { statusEl.className = 'status-msg'; }, 3000);
 }
 </script>
+<div style="position:fixed;bottom:8px;right:12px;font-size:0.65rem;color:rgba(255,255,255,0.15);pointer-events:none;z-index:9999;font-family:monospace;">v1.0.3</div>
 </body>
 </html>
