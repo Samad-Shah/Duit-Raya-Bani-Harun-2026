@@ -1057,7 +1057,7 @@ function submitToSheets(name, amount) {
   const formData = new FormData();
   formData.append(fn, name);
   formData.append(fa, 'RM' + amount);
-  formData.append('entry.1020755912', '');
+  formData.append('entry.1020755912', 'FALSE');
 
   fetch(url, { method: 'POST', body: formData, mode: 'no-cors' })
     .then(() => {
@@ -1130,6 +1130,6 @@ function saveConfig() {
   setTimeout(() => { statusEl.className = 'status-msg'; }, 3000);
 }
 </script>
-<div style="position:fixed;bottom:8px;right:12px;font-size:0.65rem;color:var(--gold);pointer-events:none;z-index:9999;font-family:monospace;">v1.0.3</div>
+<div style="position:fixed;bottom:8px;right:12px;font-size:0.65rem;color:var(--gold);pointer-events:none;z-index:9999;font-family:monospace;">v1.0.4</div>
 </body>
 </html>
