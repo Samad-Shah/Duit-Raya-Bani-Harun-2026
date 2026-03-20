@@ -583,6 +583,12 @@
       <button class="btn-save" onclick="saveConfig()">💾 Save Tetapan</button>
       <button class="btn-close-admin" onclick="toggleAdmin()">Tutup</button>
     </div>
+
+    <div style="margin-top:16px; padding:16px; background:rgba(255,255,255,0.04); border-radius:12px; border:1px solid rgba(200,168,233,0.15);">
+      <div style="font-size:0.72rem; letter-spacing:1.5px; text-transform:uppercase; color:var(--lilac); opacity:0.7; margin-bottom:10px;">🧪 Test Submission</div>
+      <button class="btn-close-admin" style="width:100%;" onclick="testSubmit()">Hantar Test Entry ke Google Sheet</button>
+      <div id="testStatus" style="font-size:0.78rem; margin-top:8px; text-align:center; color:var(--lilac); min-height:18px;"></div>
+    </div>
   </div>
 </div>
 
@@ -968,10 +974,10 @@ function pickAmount() {
 // ── MESSAGES (colloquial BM) ──
 const messages = {
   2:  ['Sikit je tapi rezeki tetap rezeki! 😄', 'Duit raya pun duit raya jugak! 🙏', 'Jangan kira banyak sikit, yang penting ikhlas! 💛'],
-  5:  ['Alhamdulillah! Cukup la tu beli teh tarik! ☕', 'Ala, boleh la beli kuih sikit! 😋', 'Rezeki juga tu, syukur! 🌙'],
-  10: ['Perghh! Boleh shopping sikit dah ni 😏', 'Wah cukup kaya la harini! 😂', 'Syukur alhamdulillah, rezeki murah! ✨'],
-  20: ['WEEEE bestnya! Belanja la adik-beradik! 🎉', 'Dulu 10 orang bagi duit raya baru dapat RM20 tau! 😎', 'MasyaAllah, #Syukur!'],
-  50: ['WOOOOOI JACKPOTTT!! 🎊🎊🎊', 'ADOIIIII RM50 weh! Belanja Teh Tarik Satuuu! 🤑', 'Haaa ni la rezeki orang murah hati! MasyaAllah! 🌟'],
+  5:  ['Alhamdulillah! Cukup la tu beli teh tarik! ☕', 'Ala, boleh la beli kuih sikit! 😋', 'Rezeki ada je, syukur! 🌙'],
+  10: ['Eh tak sangka! Boleh shopping sikit dah ni 😏', 'Wah cukup kaya la korang harini! 😂', 'Syukur alhamdulillah, rezeki murah! ✨'],
+  20: ['WEEEE bestnya! Belanja la adik-beradik! 🎉', 'Tak sia-sia mai awal pagi tau! 😎', 'MasyaAllah, mujur betul korang ni!'],
+  50: ['WOOOOOI JACKPOT LAH 🎊🎊🎊', 'ADOIIIII RM50 weh! Belanja semua orang! 🤑', 'Haaa ni la rezeki orang murah hati! MasyaAllah! 🌟'],
 };
 
 // ── SHOW RESULT ──
@@ -1055,24 +1061,40 @@ function submitToSheets(name, amount) {
 
   statusEl.textContent = '📤 Tengah hantar data...';
 
-  const params = new URLSearchParams();
-  params.append(fn, name);
-  params.append(fa, 'RM' + amount);
-  // Done QR? — hardcoded as unticked (empty value)
-  params.append('entry.1020755912', '');
+  // Use an iframe trick — most reliable way to submit Google Forms cross-origin
+  const formUrl = url;
+  const iframe = document.createElement('iframe');
+  iframe.name = 'hidden_iframe';
+  iframe.style.display = 'none';
+  document.body.appendChild(iframe);
 
-  fetch(url, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: params.toString()
-  })
-    .then(() => {
-      statusEl.textContent = '✅ Dah masuk dalam rekod!';
-    })
-    .catch(() => {
-      statusEl.textContent = '❌ Alamak, tak berjaya. Semak URL form tu.';
-    });
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = formUrl;
+  form.target = 'hidden_iframe';
+  form.style.display = 'none';
+
+  function addField(name, value) {
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = name;
+    input.value = value;
+    form.appendChild(input);
+  }
+
+  addField(fn, name);
+  addField(fa, 'RM' + amount);
+  // Done QR? — hardcoded unticked
+  addField('entry.1020755912', '');
+
+  document.body.appendChild(form);
+  form.submit();
+
+  setTimeout(() => {
+    statusEl.textContent = '✅ Dah masuk dalam rekod!';
+    document.body.removeChild(form);
+    document.body.removeChild(iframe);
+  }, 1500);
 }
 
 // ── ADMIN PANEL ──
@@ -1120,6 +1142,47 @@ function renderAdminConfig() {
 function updateProbDisplay(i) {
   const val = document.getElementById('prob_' + i).value;
   document.getElementById('probDisp_' + i).textContent = val + '% chance';
+}
+
+function testSubmit() {
+  const statusEl = document.getElementById('testStatus');
+  const url = config.sheetUrl;
+  const fn = config.fieldName;
+  const fa = config.fieldAmount;
+  if (!url || !fn || !fa) {
+    statusEl.textContent = '⚠️ Isi URL dan Field IDs dulu!';
+    statusEl.style.color = '#e74c3c';
+    return;
+  }
+  statusEl.textContent = '📤 Menghantar test entry...';
+  statusEl.style.color = 'var(--lilac)';
+
+  const iframe = document.createElement('iframe');
+  iframe.name = 'test_iframe';
+  iframe.style.display = 'none';
+  document.body.appendChild(iframe);
+
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = url;
+  form.target = 'test_iframe';
+  form.style.display = 'none';
+
+  [[fn, 'TEST NAMA'], [fa, 'RM10'], ['entry.1020755912', '']].forEach(([k, v]) => {
+    const i = document.createElement('input');
+    i.type = 'hidden'; i.name = k; i.value = v;
+    form.appendChild(i);
+  });
+
+  document.body.appendChild(form);
+  form.submit();
+
+  setTimeout(() => {
+    statusEl.textContent = '✅ Sent! Check your Google Sheet for "TEST NAMA / RM10"';
+    statusEl.style.color = '#2ecc71';
+    document.body.removeChild(form);
+    document.body.removeChild(iframe);
+  }, 1500);
 }
 
 function saveConfig() {
