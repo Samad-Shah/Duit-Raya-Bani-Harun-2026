@@ -7,18 +7,18 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lateef:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --lilac: #c8a8e9;
-    --lilac-deep: #9b59d6;
-    --lilac-dark: #5a1e96;
-    --lilac-bg: #58293D;
-    --lilac-mid: #2d1060;
-    --gold: #f5c842;
-    --gold-light: #ffe99a;
-    --gold-dark: #c49a10;
-    --cream: #fff8e7;
-    --white: #ffffff;
-    --green-raya: #2ecc71;
-  }
+    --lilac: #f0a8d0;        /* soft pink — visible on dark bg */
+    --lilac-deep: #a73c73;   /* Purple Manggis — the hero colour */
+    --lilac-dark: #7a1f52;   /* deeper plum for buttons/accents */
+    --lilac-bg: #1e0a14;     /* near-black with warm magenta tint */
+    --lilac-mid: #4a1230;    /* mid-dark plum for cards */
+    --gold: #f5c842;         /* keep gold — pops perfectly against magenta */
+    --gold-light: #ffe99a;   /* keep */
+    --gold-dark: #c49a10;    /* keep */
+    --cream: #fff0f6;        /* cream with a pink warmth */
+    --white: #ffffff;        /* keep */
+    --green-raya: #2ecc71;   /* keep */
+}
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -511,8 +511,8 @@
   </div>
 
   <div class="card">
-    <label class="input-label" for="nameInput">✦ Nama Korang</label>
-    <input type="text" id="nameInput" class="name-input" placeholder="Tulis nama korang kat sini..." autocomplete="off" maxlength="60">
+    <label class="input-label" for="nameInput">✦ Sila Isi Nama</label>
+    <input type="text" id="nameInput" class="name-input" placeholder="Tulis nama kat sini..." autocomplete="off" maxlength="60">
     <button class="raya-btn" id="mainBtn" disabled onclick="startDrama()">
       🎴 Jom Cabut Duit Raya!
     </button>
@@ -1133,6 +1133,6 @@ function saveConfig() {
   setTimeout(() => { statusEl.className = 'status-msg'; }, 3000);
 }
 </script>
-<div style="position:fixed;bottom:8px;right:12px;font-size:0.65rem;color:var(--gold);pointer-events:none;z-index:9999;font-family:monospace;">v1.0.5</div>
+<div style="position:fixed;bottom:8px;right:12px;font-size:0.65rem;color:var(--gold);pointer-events:none;z-index:9999;font-family:monospace;">v1.0.6</div>
 </body>
 </html>
