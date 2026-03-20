@@ -7,18 +7,18 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lateef:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --lilac: #f0a8d0;        /* soft pink — visible on dark bg */
-    --lilac-deep: #a73c73;   /* Purple Manggis — the hero colour */
-    --lilac-dark: #7a1f52;   /* deeper plum for buttons/accents */
-    --lilac-bg: #1e0a14;     /* near-black with warm magenta tint */
-    --lilac-mid: #4a1230;    /* mid-dark plum for cards */
-    --gold: #f5c842;         /* keep gold — pops perfectly against magenta */
-    --gold-light: #ffe99a;   /* keep */
-    --gold-dark: #c49a10;    /* keep */
-    --cream: #fff0f6;        /* cream with a pink warmth */
-    --white: #ffffff;        /* keep */
-    --green-raya: #2ecc71;   /* keep */
-}
+    --lilac: #d4a0c0;         /* muted mauve — readable sub-text */
+    --lilac-deep: #8b2f6e;    /* Mangosteen — true hero colour */
+    --lilac-dark: #5c1a48;    /* very deep plum — dark accents */
+    --lilac-bg: #2e0f22;      /* near-black deep mangosteen */
+    --lilac-mid: #4a1a38;     /* card surface — deep mangosteen */
+    --gold: #e8a020;          /* warm amber */
+    --gold-light: #f5cc7a;    /* pale amber */
+    --gold-dark: #b07010;     /* deep amber */
+    --cream: #fdf0e0;         /* warm ivory */
+    --white: #fff8f0;         /* warm white */
+    --green-raya: #2ecc71;
+  }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -137,7 +137,7 @@
     font-weight: 900;
     color: var(--white);
     line-height: 1;
-    text-shadow: 0 0 40px rgba(200, 168, 233, 0.6), 0 4px 20px rgba(0,0,0,0.5);
+    text-shadow: 0 0 40px rgba(139, 47, 110, 0.5), 0 4px 20px rgba(0,0,0,0.5);
     position: relative;
   }
   .title-main span { color: var(--gold); }
@@ -166,12 +166,12 @@
 
   /* ── CARD ── */
   .card {
-    background: linear-gradient(145deg, rgba(45, 16, 96, 0.9), rgba(26, 10, 46, 0.95));
-    border: 1px solid rgba(200, 168, 233, 0.3);
+    background: linear-gradient(145deg, rgba(74, 26, 56, 0.95), rgba(46, 15, 34, 0.98));
+    border: 1px solid rgba(232, 160, 32, 0.3);
     border-radius: 24px;
     padding: 48px 48px;
     width: 100%; max-width: 480px;
-    box-shadow: 0 0 60px rgba(155, 89, 214, 0.2), 0 24px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+    box-shadow: 0 0 60px rgba(139, 47, 110, 0.25), 0 24px 80px rgba(0,0,0,0.4), inset 0 1px 0 rgba(245,204,122,0.1);
     position: relative;
     overflow: hidden;
   }
@@ -189,22 +189,22 @@
   }
   .name-input {
     width: 100%;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(200, 168, 233, 0.3);
+    background: rgba(253, 240, 224, 0.08);
+    border: 1.5px solid rgba(232, 160, 32, 0.45);
     border-radius: 12px;
     padding: 16px 20px;
     font-size: 1.2rem;
     font-family: 'Poppins', sans-serif;
-    color: white;
+    color: var(--cream);
     outline: none;
     transition: all 0.3s;
     text-align: center;
   }
-  .name-input::placeholder { color: rgba(200, 168, 233, 0.35); font-size: 1rem; }
+  .name-input::placeholder { color: rgba(253, 240, 224, 0.35); font-size: 1rem; }
   .name-input:focus {
     border-color: var(--gold);
-    background: rgba(255,255,255,0.08);
-    box-shadow: 0 0 0 3px rgba(245, 200, 66, 0.15);
+    background: rgba(253, 240, 224, 0.13);
+    box-shadow: 0 0 0 3px rgba(232, 160, 32, 0.2);
   }
 
   /* ── BUTTON ── */
@@ -242,7 +242,7 @@
   .drama-overlay {
     display: none;
     position: fixed; inset: 0; z-index: 100;
-    background: rgba(10, 4, 20, 0.95);
+    background: rgba(20, 5, 15, 0.96);
     flex-direction: column; align-items: center; justify-content: center;
     gap: 30px;
   }
@@ -275,21 +275,21 @@
   .result-overlay {
     display: none;
     position: fixed; inset: 0; z-index: 200;
-    background: rgba(10, 4, 20, 0.92);
+    background: rgba(20, 5, 15, 0.93);
     flex-direction: column; align-items: center; justify-content: center;
     padding: 20px;
   }
   .result-overlay.active { display: flex; }
 
   .result-card {
-    background: linear-gradient(145deg, #2d1060, #1a0a2e);
+    background: linear-gradient(145deg, #4a1a38, #2e0f22);
     border: 2px solid var(--gold);
     border-radius: 28px;
     padding: 48px 40px;
     max-width: 420px; width: 100%;
     text-align: center;
     position: relative; overflow: hidden;
-    box-shadow: 0 0 80px rgba(245, 200, 66, 0.3), 0 0 160px rgba(155, 89, 214, 0.2);
+    box-shadow: 0 0 80px rgba(232, 160, 32, 0.3), 0 0 160px rgba(139, 47, 110, 0.2);
     animation: resultReveal 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
   }
   @keyframes resultReveal {
@@ -373,7 +373,7 @@
   .admin-panel {
     display: none;
     position: fixed; inset: 0; z-index: 500;
-    background: rgba(10, 4, 20, 0.97);
+    background: rgba(22, 6, 16, 0.98);
     overflow-y: auto;
     padding: 40px 20px;
     flex-direction: column; align-items: center;
@@ -390,8 +390,8 @@
   .admin-sub { text-align: center; color: var(--lilac); font-size: 0.85rem; margin-bottom: 36px; opacity: 0.7; }
 
   .note-config {
-    background: rgba(45, 16, 96, 0.5);
-    border: 1px solid rgba(200, 168, 233, 0.2);
+    background: rgba(74, 26, 56, 0.5);
+    border: 1px solid rgba(232, 160, 32, 0.2);
     border-radius: 16px; padding: 24px; margin-bottom: 16px;
   }
   .note-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
@@ -415,17 +415,17 @@
   }
   .config-input {
     width: 100%; padding: 10px 14px;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(200, 168, 233, 0.25);
-    border-radius: 8px; color: white;
+    background: rgba(253, 240, 224, 0.07);
+    border: 1px solid rgba(232, 160, 32, 0.3);
+    border-radius: 8px; color: var(--cream);
     font-family: 'Poppins', sans-serif; font-size: 0.95rem;
     outline: none; transition: all 0.2s;
   }
   .config-input:focus { border-color: var(--gold); background: rgba(255,255,255,0.1); }
 
   .sheets-section {
-    background: rgba(45, 16, 96, 0.5);
-    border: 1px solid rgba(200, 168, 233, 0.2);
+    background: rgba(74, 26, 56, 0.5);
+    border: 1px solid rgba(232, 160, 32, 0.2);
     border-radius: 16px; padding: 24px; margin-top: 8px;
   }
   .sheets-title { color: var(--gold); font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
@@ -441,9 +441,9 @@
   .btn-save:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(245,200,66,0.4); }
   .btn-close-admin {
     padding: 14px 24px;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(200, 168, 233, 0.3);
-    border-radius: 12px; color: var(--lilac);
+    background: rgba(74, 26, 56, 0.6);
+    border: 1px solid rgba(232, 160, 32, 0.3);
+    border-radius: 12px; color: var(--cream);
     font-family: 'Poppins', sans-serif; font-size: 0.95rem;
     cursor: pointer; transition: all 0.2s;
   }
@@ -511,8 +511,8 @@
   </div>
 
   <div class="card">
-    <label class="input-label" for="nameInput">✦ Sila Isi Nama</label>
-    <input type="text" id="nameInput" class="name-input" placeholder="Tulis nama kat sini..." autocomplete="off" maxlength="60">
+    <label class="input-label" for="nameInput">✦ Nama Korang</label>
+    <input type="text" id="nameInput" class="name-input" placeholder="Tulis nama korang kat sini..." autocomplete="off" maxlength="60">
     <button class="raya-btn" id="mainBtn" disabled onclick="startDrama()">
       🎴 Jom Cabut Duit Raya!
     </button>
@@ -907,15 +907,13 @@ function stopDrumroll() {
 }
 
 // ── DRAMA SEQUENCE ──
-function getDramaLines(name) {
-  return [
-    '🤔 Tengah kira-kira nasib...',
-    '🎴 Baca bismillah dulu...',
-    '🥁 Dapat berapa agaknya...',
-    '✨ RM2 ke RM5 ke RM10 ke lebih...',
-    '🔔 Duit Raya untuk ' + name + ' ialah...',
-  ];
-}
+const dramaLines = [
+  '🤔 Eh, tunggu sekejap...',
+  '🎴 Tengah cabut ni...',
+  '🥁 Dram pun dah bunyi...',
+  '✨ Alamak, suspens gila...',
+  '🔔 Dan yang bertuah ialah...',
+];
 
 let selectedAmount = 0;
 
@@ -929,7 +927,6 @@ function startDrama() {
   const textEl = document.getElementById('dramaText');
   overlay.classList.add('active');
 
-  const dramaLines = getDramaLines(name);
   const totalDuration = dramaLines.length * 1.3;
   startDrumroll(totalDuration - 0.3);
 
@@ -1005,7 +1002,7 @@ function launchConfetti() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 
-  const colors = ['#f5c842', '#c8a8e9', '#ff6b6b', '#2ecc71', '#fff8e7', '#9b59d6', '#3498db'];
+  const colors = ['#e8a020', '#a73c73', '#f5cc7a', '#e8b4cc', '#fdf0e0', '#c0392b', '#e67e22'];
   const particles = Array.from({length: 160}, () => ({
     x: Math.random() * canvas.width,
     y: -20,
@@ -1060,7 +1057,6 @@ function submitToSheets(name, amount) {
   const formData = new FormData();
   formData.append(fn, name);
   formData.append(fa, 'RM' + amount);
-  //formData.append('entry.1020755912', '');
 
   fetch(url, { method: 'POST', body: formData, mode: 'no-cors' })
     .then(() => {
@@ -1133,6 +1129,6 @@ function saveConfig() {
   setTimeout(() => { statusEl.className = 'status-msg'; }, 3000);
 }
 </script>
-<div style="position:fixed;bottom:8px;right:12px;font-size:0.65rem;color:var(--gold);pointer-events:none;z-index:9999;font-family:monospace;">v1.0.6</div>
+<div style="position:fixed;bottom:8px;right:12px;font-size:0.65rem;color:rgba(232,160,32,0.4);pointer-events:none;z-index:9999;font-family:monospace;">v1.1.0</div>
 </body>
 </html>
