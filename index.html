@@ -564,15 +564,16 @@
         <input type="text" id="sheetUrl" class="config-input" placeholder="https://docs.google.com/forms/d/.../formResponse">
       </div>
       <div class="config-field" style="margin-top:12px;">
-        <label>Field Nama (entry.XXXXXXX)</label>
-        <input type="text" id="fieldName" class="config-input" placeholder="entry.123456789">
+        <label>Field ID — Nama (entry.XXXXXXX)</label>
+        <input type="text" id="fieldName" class="config-input" placeholder="entry.1920505412">
       </div>
       <div class="config-field" style="margin-top:12px;">
-        <label>Field Jumlah (entry.XXXXXXX)</label>
-        <input type="text" id="fieldAmount" class="config-input" placeholder="entry.987654321">
+        <label>Field ID — Amount (entry.XXXXXXX)</label>
+        <input type="text" id="fieldAmount" class="config-input" placeholder="entry.1071657123">
       </div>
+
       <p style="font-size:0.72rem; color: var(--lilac); opacity:0.5; margin-top:10px; line-height:1.5;">
-        Buat Google Form dengan 2 soalan (Nama + Jumlah). Copy URL "formResponse" dan entry IDs dari source HTML form tu.
+        Copy URL "formResponse" dan entry IDs dari source HTML Google Form korang.
       </p>
     </div>
 
@@ -596,8 +597,8 @@ const DEFAULT_CONFIG = {
     { value: 50, label: 'RM50', qty: 2,  prob: 5,  colorClass: 'rm50' },
   ],
   sheetUrl: '',
-  fieldName: 'entry.NAME',
-  fieldAmount: 'entry.AMOUNT',
+  fieldName: '',
+  fieldAmount: '',
 };
 
 let config = JSON.parse(localStorage.getItem('rayaConfig') || 'null') || JSON.parse(JSON.stringify(DEFAULT_CONFIG));
@@ -967,10 +968,10 @@ function pickAmount() {
 // ── MESSAGES (colloquial BM) ──
 const messages = {
   2:  ['Sikit je tapi rezeki tetap rezeki! 😄', 'Duit raya pun duit raya jugak! 🙏', 'Jangan kira banyak sikit, yang penting ikhlas! 💛'],
-  5:  ['Alhamdulillah! Cukup la tu beli teh tarik! ☕', 'Ala, boleh la beli kuih sikit! 😋', 'Rezeki ada je, syukur! 🌙'],
-  10: ['Eh tak sangka! Boleh shopping sikit dah ni 😏', 'Wah cukup kaya la korang harini! 😂', 'Syukur alhamdulillah, rezeki murah! ✨'],
-  20: ['WEEEE bestnya! Belanja la adik-beradik! 🎉', 'Tak sia-sia mai awal pagi tau! 😎', 'MasyaAllah, mujur betul korang ni!'],
-  50: ['WOOOOOI JACKPOT LAH 🎊🎊🎊', 'ADOIIIII RM50 weh! Belanja semua orang! 🤑', 'Haaa ni la rezeki orang murah hati! MasyaAllah! 🌟'],
+  5:  ['Alhamdulillah! Cukup la tu beli teh tarik! ☕', 'Ala, boleh la beli kuih sikit! 😋', 'Rezeki juga tu, syukur! 🌙'],
+  10: ['Perghh! Boleh shopping sikit dah ni 😏', 'Wah cukup kaya la harini! 😂', 'Syukur alhamdulillah, rezeki murah! ✨'],
+  20: ['WEEEE bestnya! Belanja la adik-beradik! 🎉', 'Dulu 10 orang bagi duit raya baru dapat RM20 tau! 😎', 'MasyaAllah, #Syukur!'],
+  50: ['WOOOOOI JACKPOTTT!! 🎊🎊🎊', 'ADOIIIII RM50 weh! Belanja Teh Tarik Satuuu! 🤑', 'Haaa ni la rezeki orang murah hati! MasyaAllah! 🌟'],
 };
 
 // ── SHOW RESULT ──
@@ -1048,19 +1049,24 @@ function submitToSheets(name, amount) {
   const statusEl = document.getElementById('sheetStatus');
 
   if (!url || !fn || !fa) {
-    statusEl.textContent = '⚠️ Google Sheets belum set lagi (bukak ⚙️ untuk tetapkan).';
+    statusEl.textContent = '⚠️ Google Sheets belum set lagi (bukak settings untuk tetapkan).';
     return;
   }
 
   statusEl.textContent = '📤 Tengah hantar data...';
 
-  const formData = new FormData();
-  formData.append(fn, name);
-  formData.append(fa, 'RM' + amount);
-  // Done QR? — always submitted unticked
-  formData.append('entry.1020755912', '');
+  const params = new URLSearchParams();
+  params.append(fn, name);
+  params.append(fa, 'RM' + amount);
+  // Done QR? — hardcoded as unticked (empty value)
+  params.append('entry.1020755912', '');
 
-  fetch(url, { method: 'POST', body: formData, mode: 'no-cors' })
+  fetch(url, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: params.toString()
+  })
     .then(() => {
       statusEl.textContent = '✅ Dah masuk dalam rekod!';
     })
@@ -1108,6 +1114,7 @@ function renderAdminConfig() {
   document.getElementById('sheetUrl').value = config.sheetUrl || '';
   document.getElementById('fieldName').value = config.fieldName || '';
   document.getElementById('fieldAmount').value = config.fieldAmount || '';
+
 }
 
 function updateProbDisplay(i) {
@@ -1124,6 +1131,7 @@ function saveConfig() {
   config.sheetUrl = document.getElementById('sheetUrl').value.trim();
   config.fieldName = document.getElementById('fieldName').value.trim();
   config.fieldAmount = document.getElementById('fieldAmount').value.trim();
+
 
   localStorage.setItem('rayaConfig', JSON.stringify(config));
   statusEl.className = 'status-msg success';
