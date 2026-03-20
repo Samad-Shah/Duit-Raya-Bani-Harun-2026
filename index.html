@@ -907,13 +907,15 @@ function stopDrumroll() {
 }
 
 // ── DRAMA SEQUENCE ──
-const dramaLines = [
-  '🤔 Eh, tunggu sekejap...',
-  '🎴 Tengah cabut ni...',
-  '🥁 Dram pun dah bunyi...',
-  '✨ Alamak, suspens gila...',
-  '🔔 Dan yang bertuah ialah...',
-];
+function getDramaLines(name) {
+  return [
+    '🤔 Tengah kira-kira nasib...',
+    '🎴 Baca bismillah dulu...',
+    '🥁 Dapat berapa agaknya...',
+    '✨ RM2 ke RM5 ke RM10 ke lebih...',
+    '🔔 Duit Raya untuk ' + name + ' ialah...',
+  ];
+}
 
 let selectedAmount = 0;
 
@@ -927,6 +929,7 @@ function startDrama() {
   const textEl = document.getElementById('dramaText');
   overlay.classList.add('active');
 
+  const dramaLines = getDramaLines(name);
   const totalDuration = dramaLines.length * 1.3;
   startDrumroll(totalDuration - 0.3);
 
@@ -1057,7 +1060,7 @@ function submitToSheets(name, amount) {
   const formData = new FormData();
   formData.append(fn, name);
   formData.append(fa, 'RM' + amount);
-  formData.append('entry.1020755912', 'FALSE');
+  //formData.append('entry.1020755912', '');
 
   fetch(url, { method: 'POST', body: formData, mode: 'no-cors' })
     .then(() => {
@@ -1130,6 +1133,6 @@ function saveConfig() {
   setTimeout(() => { statusEl.className = 'status-msg'; }, 3000);
 }
 </script>
-<div style="position:fixed;bottom:8px;right:12px;font-size:0.65rem;color:var(--gold);pointer-events:none;z-index:9999;font-family:monospace;">v1.0.4</div>
+<div style="position:fixed;bottom:8px;right:12px;font-size:0.65rem;color:var(--gold);pointer-events:none;z-index:9999;font-family:monospace;">v1.0.5</div>
 </body>
 </html>
