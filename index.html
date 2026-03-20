@@ -1057,6 +1057,8 @@ function submitToSheets(name, amount) {
   const formData = new FormData();
   formData.append(fn, name);
   formData.append(fa, 'RM' + amount);
+  // Done QR? — always submitted unticked
+  formData.append('entry.1020755912', '');
 
   fetch(url, { method: 'POST', body: formData, mode: 'no-cors' })
     .then(() => {
