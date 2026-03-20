@@ -564,16 +564,15 @@
         <input type="text" id="sheetUrl" class="config-input" placeholder="https://docs.google.com/forms/d/.../formResponse">
       </div>
       <div class="config-field" style="margin-top:12px;">
-        <label>Field ID — Nama (entry.XXXXXXX)</label>
-        <input type="text" id="fieldName" class="config-input" placeholder="entry.1920505412">
+        <label>Field Nama (entry.XXXXXXX)</label>
+        <input type="text" id="fieldName" class="config-input" placeholder="entry.123456789">
       </div>
       <div class="config-field" style="margin-top:12px;">
-        <label>Field ID — Amount (entry.XXXXXXX)</label>
-        <input type="text" id="fieldAmount" class="config-input" placeholder="entry.1071657123">
+        <label>Field Jumlah (entry.XXXXXXX)</label>
+        <input type="text" id="fieldAmount" class="config-input" placeholder="entry.987654321">
       </div>
-
       <p style="font-size:0.72rem; color: var(--lilac); opacity:0.5; margin-top:10px; line-height:1.5;">
-        Copy URL "formResponse" dan entry IDs dari source HTML Google Form korang.
+        Buat Google Form dengan 2 soalan (Nama + Jumlah). Copy URL "formResponse" dan entry IDs dari source HTML form tu.
       </p>
     </div>
 
@@ -582,12 +581,6 @@
     <div class="admin-actions">
       <button class="btn-save" onclick="saveConfig()">💾 Save Tetapan</button>
       <button class="btn-close-admin" onclick="toggleAdmin()">Tutup</button>
-    </div>
-
-    <div style="margin-top:16px; padding:16px; background:rgba(255,255,255,0.04); border-radius:12px; border:1px solid rgba(200,168,233,0.15);">
-      <div style="font-size:0.72rem; letter-spacing:1.5px; text-transform:uppercase; color:var(--lilac); opacity:0.7; margin-bottom:10px;">🧪 Test Submission</div>
-      <button class="btn-close-admin" style="width:100%;" onclick="testSubmit()">Hantar Test Entry ke Google Sheet</button>
-      <div id="testStatus" style="font-size:0.78rem; margin-top:8px; text-align:center; color:var(--lilac); min-height:18px;"></div>
     </div>
   </div>
 </div>
@@ -603,8 +596,8 @@ const DEFAULT_CONFIG = {
     { value: 50, label: 'RM50', qty: 2,  prob: 5,  colorClass: 'rm50' },
   ],
   sheetUrl: '',
-  fieldName: '',
-  fieldAmount: '',
+  fieldName: 'entry.NAME',
+  fieldAmount: 'entry.AMOUNT',
 };
 
 let config = JSON.parse(localStorage.getItem('rayaConfig') || 'null') || JSON.parse(JSON.stringify(DEFAULT_CONFIG));
@@ -667,7 +660,7 @@ function handleSecretTap(e) {
     secretTaps = 0;
     setTimeout(() => {
       const pwd = prompt('🔒 Password admin:');
-      if (pwd === 'admin123') toggleAdmin();
+      if (pwd === 'admin1234') toggleAdmin();
     }, 150);
   } else {
     secretTimer = setTimeout(() => { secretTaps = 0; }, 3000);
@@ -1055,46 +1048,24 @@ function submitToSheets(name, amount) {
   const statusEl = document.getElementById('sheetStatus');
 
   if (!url || !fn || !fa) {
-    statusEl.textContent = '⚠️ Google Sheets belum set lagi (bukak settings untuk tetapkan).';
+    statusEl.textContent = '⚠️ Google Sheets belum set lagi (bukak ⚙️ untuk tetapkan).';
     return;
   }
 
   statusEl.textContent = '📤 Tengah hantar data...';
 
-  // Use an iframe trick — most reliable way to submit Google Forms cross-origin
-  const formUrl = url;
-  const iframe = document.createElement('iframe');
-  iframe.name = 'hidden_iframe';
-  iframe.style.display = 'none';
-  document.body.appendChild(iframe);
+  const formData = new FormData();
+  formData.append(fn, name);
+  formData.append(fa, 'RM' + amount);
+  formData.append('entry.1020755912', '');
 
-  const form = document.createElement('form');
-  form.method = 'POST';
-  form.action = formUrl;
-  form.target = 'hidden_iframe';
-  form.style.display = 'none';
-
-  function addField(name, value) {
-    const input = document.createElement('input');
-    input.type = 'hidden';
-    input.name = name;
-    input.value = value;
-    form.appendChild(input);
-  }
-
-  addField(fn, name);
-  addField(fa, 'RM' + amount);
-  // Done QR? — hardcoded unticked
-  addField('entry.1020755912', '');
-
-  document.body.appendChild(form);
-  form.submit();
-
-  setTimeout(() => {
-    statusEl.textContent = '✅ Dah masuk dalam rekod!';
-    document.body.removeChild(form);
-    document.body.removeChild(iframe);
-  }, 1500);
+  fetch(url, { method: 'POST', body: formData, mode: 'no-cors' })
+    .then(() => {
+      statusEl.textContent = '✅ Dah masuk dalam rekod!';
+    })
+    .catch(() => {
+      statusEl.textContent = '❌ Alamak, tak berjaya. Semak URL form tu.';
+    });
 }
 
 // ── ADMIN PANEL ──
@@ -1136,53 +1107,11 @@ function renderAdminConfig() {
   document.getElementById('sheetUrl').value = config.sheetUrl || '';
   document.getElementById('fieldName').value = config.fieldName || '';
   document.getElementById('fieldAmount').value = config.fieldAmount || '';
-
 }
 
 function updateProbDisplay(i) {
   const val = document.getElementById('prob_' + i).value;
   document.getElementById('probDisp_' + i).textContent = val + '% chance';
-}
-
-function testSubmit() {
-  const statusEl = document.getElementById('testStatus');
-  const url = config.sheetUrl;
-  const fn = config.fieldName;
-  const fa = config.fieldAmount;
-  if (!url || !fn || !fa) {
-    statusEl.textContent = '⚠️ Isi URL dan Field IDs dulu!';
-    statusEl.style.color = '#e74c3c';
-    return;
-  }
-  statusEl.textContent = '📤 Menghantar test entry...';
-  statusEl.style.color = 'var(--lilac)';
-
-  const iframe = document.createElement('iframe');
-  iframe.name = 'test_iframe';
-  iframe.style.display = 'none';
-  document.body.appendChild(iframe);
-
-  const form = document.createElement('form');
-  form.method = 'POST';
-  form.action = url;
-  form.target = 'test_iframe';
-  form.style.display = 'none';
-
-  [[fn, 'TEST NAMA'], [fa, 'RM10'], ['entry.1020755912', '']].forEach(([k, v]) => {
-    const i = document.createElement('input');
-    i.type = 'hidden'; i.name = k; i.value = v;
-    form.appendChild(i);
-  });
-
-  document.body.appendChild(form);
-  form.submit();
-
-  setTimeout(() => {
-    statusEl.textContent = '✅ Sent! Check your Google Sheet for "TEST NAMA / RM10"';
-    statusEl.style.color = '#2ecc71';
-    document.body.removeChild(form);
-    document.body.removeChild(iframe);
-  }, 1500);
 }
 
 function saveConfig() {
@@ -1194,7 +1123,6 @@ function saveConfig() {
   config.sheetUrl = document.getElementById('sheetUrl').value.trim();
   config.fieldName = document.getElementById('fieldName').value.trim();
   config.fieldAmount = document.getElementById('fieldAmount').value.trim();
-
 
   localStorage.setItem('rayaConfig', JSON.stringify(config));
   statusEl.className = 'status-msg success';
