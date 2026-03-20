@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Berapa Duit Raya Saya?</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lateef:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --lilac: #c8a8e9;
+    --lilac-deep: #9b59d6;
+    --lilac-dark: #5a1e96;
+    --lilac-bg: #1a0a2e;
+    --lilac-mid: #2d1060;
+    --gold: #f5c842;
+    --gold-light: #ffe99a;
+    --gold-dark: #c49a10;
+    --cream: #fff8e7;
+    --white: #ffffff;
+    --green-raya: #2ecc71;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--lilac-bg);
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* ── STARS BACKGROUND ── */
+  .stars {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  }
+  .star {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle var(--d) ease-in-out infinite alternate;
+  }
+  @keyframes twinkle { from { opacity: 0.1; transform: scale(0.8); } to { opacity: 0.9; transform: scale(1.2); } }
+
+  /* ── GEOMETRIC ORNAMENTS ── */
+  .ornament-top, .ornament-bottom {
+    position: fixed; left: 0; right: 0;
+    pointer-events: none; z-index: 1;
+    display: flex; justify-content: center; gap: 16px;
+  }
+  .ornament-top { top: 0; }
+  .ornament-bottom { bottom: 0; }
+
+  .geo-arch {
+    width: 60px; height: 90px;
+    border: 2px solid var(--gold);
+    border-radius: 50% 50% 0 0;
+    position: relative;
+    opacity: 0.4;
+  }
+  .geo-arch::after {
+    content: '';
+    position: absolute;
+    inset: 8px 8px 0;
+    border: 1px solid var(--gold-light);
+    border-radius: 50% 50% 0 0;
+  }
+
+  /* ── LANTERNS ── */
+  .lanterns {
+    position: fixed; top: 0; left: 0; right: 0;
+    display: flex; justify-content: space-around;
+    padding: 0 20px; pointer-events: none; z-index: 2;
+  }
+  .lantern-wrap {
+    display: flex; flex-direction: column; align-items: center;
+    animation: sway 3s ease-in-out infinite alternate;
+  }
+  .lantern-wrap:nth-child(even) { animation-direction: alternate-reverse; }
+  .lantern-string { width: 2px; height: 40px; background: linear-gradient(var(--gold), transparent); }
+  .lantern {
+    width: 28px; height: 40px;
+    background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+    border-radius: 40% 40% 50% 50%;
+    position: relative;
+    box-shadow: 0 0 20px rgba(255, 100, 50, 0.6), 0 0 40px rgba(255, 100, 50, 0.3);
+    border: 1px solid var(--gold);
+  }
+  .lantern::before {
+    content: '';
+    position: absolute; top: -6px; left: 50%; transform: translateX(-50%);
+    width: 16px; height: 8px;
+    background: var(--gold);
+    border-radius: 4px 4px 0 0;
+  }
+  .lantern::after {
+    content: '';
+    position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%);
+    width: 8px; height: 10px;
+    background: var(--gold);
+    border-radius: 0 0 50% 50%;
+  }
+  @keyframes sway { from { transform: rotate(-5deg); } to { transform: rotate(5deg); } }
+
+  /* ── CRESCENT & STAR SVG decorations ── */
+  .crescent-left, .crescent-right {
+    position: fixed; top: 50%; transform: translateY(-50%);
+    pointer-events: none; z-index: 1;
+    opacity: 0.15;
+  }
+  .crescent-left { left: -40px; }
+  .crescent-right { right: -40px; }
+
+  /* ── MAIN LAYOUT ── */
+  .page {
+    position: relative; z-index: 10;
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 120px 20px 80px;
+  }
+
+  /* ── TITLE ── */
+  .title-wrap {
+    text-align: center; margin-bottom: 48px;
+  }
+  .title-arabic {
+    font-family: 'Lateef', serif;
+    font-size: clamp(1.2rem, 3vw, 1.8rem);
+    color: var(--gold-light);
+    display: block; margin-bottom: 4px;
+    letter-spacing: 2px;
+    opacity: 0.8;
+  }
+  .title-main {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.4rem, 7vw, 5rem);
+    font-weight: 900;
+    color: var(--white);
+    line-height: 1;
+    text-shadow: 0 0 40px rgba(200, 168, 233, 0.6), 0 4px 20px rgba(0,0,0,0.5);
+    position: relative;
+  }
+  .title-main span { color: var(--gold); }
+  .title-subtitle {
+    font-size: 0.9rem;
+    color: var(--lilac);
+    margin-top: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+
+  /* ── GOLD DIVIDER ── */
+  .divider {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 40px;
+    width: 320px; max-width: 100%;
+  }
+  .divider-line { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+  .divider-diamond {
+    width: 8px; height: 8px;
+    background: var(--gold);
+    transform: rotate(45deg);
+    box-shadow: 0 0 8px var(--gold);
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: linear-gradient(145deg, rgba(45, 16, 96, 0.9), rgba(26, 10, 46, 0.95));
+    border: 1px solid rgba(200, 168, 233, 0.3);
+    border-radius: 24px;
+    padding: 48px 48px;
+    width: 100%; max-width: 480px;
+    box-shadow: 0 0 60px rgba(155, 89, 214, 0.2), 0 24px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), var(--lilac), var(--gold), transparent);
+  }
+
+  /* ── INPUT ── */
+  .input-label {
+    display: block;
+    font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--lilac); margin-bottom: 10px;
+  }
+  .name-input {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(200, 168, 233, 0.3);
+    border-radius: 12px;
+    padding: 16px 20px;
+    font-size: 1.2rem;
+    font-family: 'Poppins', sans-serif;
+    color: white;
+    outline: none;
+    transition: all 0.3s;
+    text-align: center;
+  }
+  .name-input::placeholder { color: rgba(200, 168, 233, 0.35); font-size: 1rem; }
+  .name-input:focus {
+    border-color: var(--gold);
+    background: rgba(255,255,255,0.08);
+    box-shadow: 0 0 0 3px rgba(245, 200, 66, 0.15);
+  }
+
+  /* ── BUTTON ── */
+  .raya-btn {
+    width: 100%; margin-top: 24px;
+    padding: 20px;
+    border: none; border-radius: 14px;
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold), var(--gold-light), var(--gold));
+    background-size: 200% 200%;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem; font-weight: 700;
+    color: var(--lilac-dark);
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative; overflow: hidden;
+    letter-spacing: 0.5px;
+    box-shadow: 0 8px 30px rgba(245, 200, 66, 0.4);
+    animation: goldShimmer 3s ease infinite;
+  }
+  @keyframes goldShimmer { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+  .raya-btn:disabled {
+    background: rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.2);
+    cursor: not-allowed;
+    box-shadow: none;
+    animation: none;
+  }
+  .raya-btn:not(:disabled):hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 40px rgba(245, 200, 66, 0.6);
+  }
+  .raya-btn:not(:disabled):active { transform: translateY(0); }
+
+  /* ── DRAMA OVERLAY ── */
+  .drama-overlay {
+    display: none;
+    position: fixed; inset: 0; z-index: 100;
+    background: rgba(10, 4, 20, 0.95);
+    flex-direction: column; align-items: center; justify-content: center;
+    gap: 30px;
+  }
+  .drama-overlay.active { display: flex; }
+
+  .drama-text {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.5rem, 5vw, 3rem);
+    color: white;
+    text-align: center;
+    opacity: 0;
+    animation: fadeInOut 1.2s ease forwards;
+  }
+  @keyframes fadeInOut { 0% { opacity: 0; transform: scale(0.8); } 30%,70% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(1.1); } }
+
+  .drum-roll {
+    display: flex; gap: 8px;
+  }
+  .drum-dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--gold);
+    animation: drumBeat 0.3s ease-in-out infinite alternate;
+  }
+  .drum-dot:nth-child(2) { animation-delay: 0.1s; background: var(--lilac); }
+  .drum-dot:nth-child(3) { animation-delay: 0.2s; background: var(--gold-light); }
+  @keyframes drumBeat { from { transform: scale(0.5); opacity: 0.3; } to { transform: scale(1.5); opacity: 1; } }
+
+  /* ── RESULT CARD ── */
+  .result-overlay {
+    display: none;
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(10, 4, 20, 0.92);
+    flex-direction: column; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .result-overlay.active { display: flex; }
+
+  .result-card {
+    background: linear-gradient(145deg, #2d1060, #1a0a2e);
+    border: 2px solid var(--gold);
+    border-radius: 28px;
+    padding: 48px 40px;
+    max-width: 420px; width: 100%;
+    text-align: center;
+    position: relative; overflow: hidden;
+    box-shadow: 0 0 80px rgba(245, 200, 66, 0.3), 0 0 160px rgba(155, 89, 214, 0.2);
+    animation: resultReveal 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+  @keyframes resultReveal {
+    from { transform: scale(0.5) rotate(-5deg); opacity: 0; }
+    to { transform: scale(1) rotate(0deg); opacity: 1; }
+  }
+  .result-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--gold), var(--lilac), var(--gold));
+  }
+
+  .result-emoji { font-size: 3rem; margin-bottom: 12px; animation: bounceIn 0.5s 0.4s ease both; }
+  @keyframes bounceIn { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+  .result-greeting {
+    font-size: 0.85rem; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--lilac); margin-bottom: 8px;
+  }
+  .result-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem; color: white; margin-bottom: 24px;
+  }
+  .result-amount-label {
+    font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--lilac); opacity: 0.7; margin-bottom: 8px;
+  }
+  .result-amount {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 12vw, 5.5rem);
+    font-weight: 900;
+    color: var(--gold);
+    text-shadow: 0 0 30px rgba(245, 200, 66, 0.7), 0 0 60px rgba(245, 200, 66, 0.3);
+    line-height: 1;
+    animation: pulseGold 2s ease-in-out infinite;
+    margin-bottom: 8px;
+  }
+  @keyframes pulseGold {
+    0%,100% { text-shadow: 0 0 30px rgba(245, 200, 66, 0.7); }
+    50% { text-shadow: 0 0 60px rgba(245, 200, 66, 1), 0 0 100px rgba(245, 200, 66, 0.5); }
+  }
+  .result-note { font-size: 0.85rem; color: var(--lilac); opacity: 0.6; }
+
+  .result-msg {
+    margin: 20px 0;
+    font-size: 0.95rem; color: rgba(255,255,255,0.7);
+    font-style: italic;
+  }
+
+  .btn-again {
+    margin-top: 24px;
+    padding: 14px 32px;
+    border-radius: 12px;
+    border: 2px solid var(--gold);
+    background: transparent;
+    color: var(--gold);
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem; font-weight: 600;
+    cursor: pointer; letter-spacing: 1px;
+    transition: all 0.3s;
+  }
+  .btn-again:hover { background: var(--gold); color: var(--lilac-dark); transform: translateY(-2px); }
+
+  .confetti-canvas {
+    position: fixed; inset: 0; pointer-events: none; z-index: 300;
+  }
+
+  /* ── ADMIN PANEL ── */
+  .admin-toggle {
+    position: fixed; bottom: 24px; right: 24px; z-index: 50;
+    width: 48px; height: 48px; border-radius: 50%;
+    background: transparent;
+    border: none;
+    color: transparent;
+    font-size: 1.2rem; cursor: default;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .admin-panel {
+    display: none;
+    position: fixed; inset: 0; z-index: 500;
+    background: rgba(10, 4, 20, 0.97);
+    overflow-y: auto;
+    padding: 40px 20px;
+    flex-direction: column; align-items: center;
+  }
+  .admin-panel.active { display: flex; }
+
+  .admin-inner { width: 100%; max-width: 560px; }
+
+  .admin-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; color: var(--gold);
+    margin-bottom: 8px; text-align: center;
+  }
+  .admin-sub { text-align: center; color: var(--lilac); font-size: 0.85rem; margin-bottom: 36px; opacity: 0.7; }
+
+  .note-config {
+    background: rgba(45, 16, 96, 0.5);
+    border: 1px solid rgba(200, 168, 233, 0.2);
+    border-radius: 16px; padding: 24px; margin-bottom: 16px;
+  }
+  .note-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+  .note-bill {
+    background: var(--green-raya);
+    color: white; font-weight: 700;
+    padding: 6px 14px; border-radius: 8px;
+    font-size: 0.95rem; min-width: 56px; text-align: center;
+  }
+  .note-bill.rm2 { background: #3498db; }
+  .note-bill.rm5 { background: #27ae60; }
+  .note-bill.rm10 { background: #e74c3c; }
+  .note-bill.rm20 { background: #f39c12; }
+  .note-bill.rm50 { background: #8e44ad; }
+  .note-name { color: white; font-weight: 600; font-size: 1rem; flex: 1; }
+
+  .config-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .config-field label {
+    display: block; font-size: 0.7rem; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--lilac); margin-bottom: 6px; opacity: 0.7;
+  }
+  .config-input {
+    width: 100%; padding: 10px 14px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(200, 168, 233, 0.25);
+    border-radius: 8px; color: white;
+    font-family: 'Poppins', sans-serif; font-size: 0.95rem;
+    outline: none; transition: all 0.2s;
+  }
+  .config-input:focus { border-color: var(--gold); background: rgba(255,255,255,0.1); }
+
+  .sheets-section {
+    background: rgba(45, 16, 96, 0.5);
+    border: 1px solid rgba(200, 168, 233, 0.2);
+    border-radius: 16px; padding: 24px; margin-top: 8px;
+  }
+  .sheets-title { color: var(--gold); font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+
+  .admin-actions { display: flex; gap: 12px; margin-top: 28px; }
+  .btn-save {
+    flex: 1; padding: 14px;
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+    border: none; border-radius: 12px;
+    font-family: 'Poppins', sans-serif; font-size: 0.95rem; font-weight: 600;
+    color: var(--lilac-dark); cursor: pointer; transition: all 0.2s;
+  }
+  .btn-save:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(245,200,66,0.4); }
+  .btn-close-admin {
+    padding: 14px 24px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(200, 168, 233, 0.3);
+    border-radius: 12px; color: var(--lilac);
+    font-family: 'Poppins', sans-serif; font-size: 0.95rem;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .btn-close-admin:hover { background: rgba(255,255,255,0.1); }
+
+  .prob-display {
+    font-size: 0.75rem; color: var(--gold); margin-top: 4px;
+    font-weight: 600;
+  }
+
+  .status-msg {
+    margin-top: 12px; padding: 10px 16px;
+    border-radius: 8px; font-size: 0.85rem; text-align: center;
+    display: none;
+  }
+  .status-msg.success { display: block; background: rgba(46,204,113,0.15); color: #2ecc71; border: 1px solid rgba(46,204,113,0.3); }
+  .status-msg.error { display: block; background: rgba(231,76,60,0.15); color: #e74c3c; border: 1px solid rgba(231,76,60,0.3); }
+
+  /* ── SHEET STATUS ── */
+  .sheet-status {
+    font-size: 0.75rem; margin-top: 8px;
+    color: var(--lilac); opacity: 0.6;
+    text-align: center;
+  }
+
+  @media (max-width: 500px) {
+    .card { padding: 32px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Stars -->
+<div class="stars" id="stars"></div>
+
+<!-- Lanterns -->
+<div class="lanterns" id="lanterns"></div>
+
+<!-- Crescent moons -->
+<svg class="crescent-left" width="120" height="220" viewBox="0 0 120 220">
+  <path d="M90,110 A60,60 0 1,1 90,110.1 A40,40 0 1,0 90,110Z" fill="var(--gold)" transform="rotate(30 60 110)"/>
+</svg>
+<svg class="crescent-right" width="120" height="220" viewBox="0 0 120 220">
+  <path d="M30,110 A60,60 0 1,0 30,110.1 A40,40 0 1,1 30,110Z" fill="var(--gold)" transform="rotate(-30 60 110)"/>
+</svg>
+
+<!-- Ornaments top -->
+<div class="ornament-top" id="ornTop"></div>
+<div class="ornament-bottom" id="ornBot"></div>
+
+<!-- ── MAIN PAGE ── -->
+<div class="page">
+  <div class="title-wrap">
+    <span class="title-arabic">بَرَاپَا دُوِيت رَايَ سَايَا؟</span>
+    <h1 class="title-main">Berapa <span>Duit Raya</span> Saya?</h1>
+    <p class="title-subtitle" id="secretTrigger" style="cursor:default;user-select:none;">✦ Selamat Hari Raya Aidilfitri ✦</p>
+  </div>
+
+  <div class="divider">
+    <div class="divider-line"></div>
+    <div class="divider-diamond"></div>
+    <div class="divider-diamond" style="background:var(--lilac); box-shadow: 0 0 8px var(--lilac);"></div>
+    <div class="divider-diamond"></div>
+    <div class="divider-line"></div>
+  </div>
+
+  <div class="card">
+    <label class="input-label" for="nameInput">✦ Nama Korang</label>
+    <input type="text" id="nameInput" class="name-input" placeholder="Tulis nama korang kat sini..." autocomplete="off" maxlength="60">
+    <button class="raya-btn" id="mainBtn" disabled onclick="startDrama()">
+      🎴 Jom Cabut Duit Raya!
+    </button>
+  </div>
+</div>
+
+<!-- ── DRAMA OVERLAY ── -->
+<div class="drama-overlay" id="dramaOverlay">
+  <div class="drama-text" id="dramaText"></div>
+  <div class="drum-roll">
+    <div class="drum-dot"></div>
+    <div class="drum-dot"></div>
+    <div class="drum-dot"></div>
+  </div>
+</div>
+
+<!-- ── RESULT OVERLAY ── -->
+<div class="result-overlay" id="resultOverlay">
+  <canvas class="confetti-canvas" id="confettiCanvas"></canvas>
+  <div class="result-card">
+    <div class="result-emoji">🎉</div>
+    <div class="result-greeting">Tahniah weh!</div>
+    <div class="result-name" id="resultName"></div>
+    <div class="result-amount-label">Duit Raya korang ialah</div>
+    <div class="result-amount" id="resultAmount"></div>
+    <div class="result-note">Tanda Kasih ❤️</div>
+    <div class="result-msg" id="resultMsg"></div>
+    <button class="btn-again" onclick="resetAll()">↩ Orang lain pula</button>
+    <div class="sheet-status" id="sheetStatus"></div>
+  </div>
+</div>
+
+<!-- ── ADMIN PANEL ── -->
+<button class="admin-toggle" onclick="toggleAdmin()" title="Tetapan Admin">⚙️</button>
+
+<div class="admin-panel" id="adminPanel">
+  <div class="admin-inner">
+    <div class="admin-title">⚙️ Tetapan Admin</div>
+    <div class="admin-sub">Set berapa keping & peluang untuk setiap duit raya</div>
+
+    <!-- Note configs -->
+    <div id="noteConfigs"></div>
+
+    <!-- Google Sheets -->
+    <div class="sheets-section">
+      <div class="sheets-title">📊 Google Sheets Integration</div>
+      <div class="config-field">
+        <label>URL Google Form (formResponse)</label>
+        <input type="text" id="sheetUrl" class="config-input" placeholder="https://docs.google.com/forms/d/.../formResponse">
+      </div>
+      <div class="config-field" style="margin-top:12px;">
+        <label>Field Nama (entry.XXXXXXX)</label>
+        <input type="text" id="fieldName" class="config-input" placeholder="entry.123456789">
+      </div>
+      <div class="config-field" style="margin-top:12px;">
+        <label>Field Jumlah (entry.XXXXXXX)</label>
+        <input type="text" id="fieldAmount" class="config-input" placeholder="entry.987654321">
+      </div>
+      <p style="font-size:0.72rem; color: var(--lilac); opacity:0.5; margin-top:10px; line-height:1.5;">
+        Buat Google Form dengan 2 soalan (Nama + Jumlah). Copy URL "formResponse" dan entry IDs dari source HTML form tu.
+      </p>
+    </div>
+
+    <div id="adminStatus" class="status-msg"></div>
+
+    <div class="admin-actions">
+      <button class="btn-save" onclick="saveConfig()">💾 Save Tetapan</button>
+      <button class="btn-close-admin" onclick="toggleAdmin()">Tutup</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── DEFAULT CONFIG ──
+const DEFAULT_CONFIG = {
+  notes: [
+    { value: 2,  label: 'RM2',  qty: 5,  prob: 30, colorClass: 'rm2'  },
+    { value: 5,  label: 'RM5',  qty: 5,  prob: 30, colorClass: 'rm5'  },
+    { value: 10, label: 'RM10', qty: 5,  prob: 20, colorClass: 'rm10' },
+    { value: 20, label: 'RM20', qty: 3,  prob: 15, colorClass: 'rm20' },
+    { value: 50, label: 'RM50', qty: 2,  prob: 5,  colorClass: 'rm50' },
+  ],
+  sheetUrl: '',
+  fieldName: 'entry.NAME',
+  fieldAmount: 'entry.AMOUNT',
+};
+
+let config = JSON.parse(localStorage.getItem('rayaConfig') || 'null') || JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+
+// ── STARS ──
+const starsEl = document.getElementById('stars');
+for (let i = 0; i < 120; i++) {
+  const s = document.createElement('div');
+  s.className = 'star';
+  const size = Math.random() * 3 + 1;
+  s.style.cssText = `width:${size}px;height:${size}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${(Math.random()*3+1).toFixed(1)}s;animation-delay:${(Math.random()*3).toFixed(1)}s`;
+  starsEl.appendChild(s);
+}
+
+// ── LANTERNS ──
+const lanternsEl = document.getElementById('lanterns');
+for (let i = 0; i < 8; i++) {
+  const wrap = document.createElement('div');
+  wrap.className = 'lantern-wrap';
+  wrap.innerHTML = `<div class="lantern-string"></div><div class="lantern"></div>`;
+  wrap.style.animationDelay = (i * 0.4) + 's';
+  lanternsEl.appendChild(wrap);
+}
+
+// ── ORNAMENTS ──
+function buildOrnaments(id) {
+  const el = document.getElementById(id);
+  for (let i = 0; i < 7; i++) {
+    const d = document.createElement('div');
+    d.className = 'geo-arch';
+    d.style.animationDelay = (i * 0.15) + 's';
+    el.appendChild(d);
+  }
+}
+buildOrnaments('ornTop');
+buildOrnaments('ornBot');
+
+// ── INPUT ENABLE BUTTON ──
+const nameInput = document.getElementById('nameInput');
+const mainBtn = document.getElementById('mainBtn');
+nameInput.addEventListener('input', () => {
+  mainBtn.disabled = nameInput.value.trim().length === 0;
+});
+
+// ── SECRET ADMIN: tap subtitle 5 times ──
+let secretTaps = 0;
+let secretTimer;
+const secretTrigger = document.getElementById('secretTrigger');
+
+function handleSecretTap(e) {
+  e.preventDefault();
+  secretTaps++;
+  // Flash the element so user knows it registered
+  secretTrigger.style.transition = 'opacity 0.1s';
+  secretTrigger.style.opacity = '0.3';
+  setTimeout(() => { secretTrigger.style.opacity = ''; }, 120);
+
+  clearTimeout(secretTimer);
+  if (secretTaps >= 5) {
+    secretTaps = 0;
+    setTimeout(() => {
+      const pwd = prompt('🔒 Password admin:');
+      if (pwd === 'admin123') toggleAdmin();
+    }, 150);
+  } else {
+    secretTimer = setTimeout(() => { secretTaps = 0; }, 3000);
+  }
+}
+
+secretTrigger.addEventListener('click', handleSecretTap);
+secretTrigger.addEventListener('touchend', handleSecretTap, { passive: false });
+
+// ── WEB AUDIO: suspense drumroll ──
+let audioCtx = null;
+let drumNodes = [];
+
+function initAudio() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+}
+
+function playDrumTick(time, volume = 0.4) {
+  if (!audioCtx) return;
+  const buf = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.08, audioCtx.sampleRate);
+  const data = buf.getChannelData(0);
+  for (let i = 0; i < data.length; i++) {
+    data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / data.length, 4);
+  }
+  const src = audioCtx.createBufferSource();
+  src.buffer = buf;
+
+  const filter = audioCtx.createBiquadFilter();
+  filter.type = 'bandpass';
+  filter.frequency.value = 180;
+  filter.Q.value = 0.8;
+
+  const gain = audioCtx.createGain();
+  gain.gain.setValueAtTime(volume, time);
+  gain.gain.exponentialRampToValueAtTime(0.001, time + 0.07);
+
+  src.connect(filter);
+  filter.connect(gain);
+  gain.connect(audioCtx.destination);
+  src.start(time);
+  drumNodes.push(src);
+}
+
+function playRimshot(time) {
+  if (!audioCtx) return;
+  [800, 1200, 2000].forEach((freq, i) => {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(freq, time);
+    osc.frequency.exponentialRampToValueAtTime(freq * 0.5, time + 0.15);
+    gain.gain.setValueAtTime(0.3 - i * 0.08, time);
+    gain.gain.exponentialRampToValueAtTime(0.001, time + 0.2);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start(time);
+    osc.stop(time + 0.2);
+  });
+}
+
+// ── SAD TROMBONE (RM2) wah wah wah wahhhh ──
+function playSadTrombone() {
+  if (!audioCtx) return;
+  const now = audioCtx.currentTime;
+  // wah wah wah wahhh descending glide
+  const pattern = [
+    { start: 0.0,  from: 466, to: 370, dur: 0.32 },
+    { start: 0.35, from: 415, to: 330, dur: 0.32 },
+    { start: 0.70, from: 370, to: 294, dur: 0.32 },
+    { start: 1.05, from: 330, to: 196, dur: 0.9  },
+  ];
+  pattern.forEach(({ start, from, to, dur }) => {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    // Mute-wah filter
+    const filter = audioCtx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.setValueAtTime(800, now + start);
+    filter.frequency.exponentialRampToValueAtTime(300, now + start + dur);
+    filter.Q.value = 3;
+
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(from, now + start);
+    osc.frequency.exponentialRampToValueAtTime(to, now + start + dur);
+
+    const t = now + start;
+    gain.gain.setValueAtTime(0, t);
+    gain.gain.linearRampToValueAtTime(0.4, t + 0.05);
+    gain.gain.setValueAtTime(0.4, t + dur - 0.1);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + dur);
+
+    osc.connect(filter);
+    filter.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start(t);
+    osc.stop(t + dur + 0.05);
+  });
+}
+
+// ── STANDARD FANFARE (RM5–RM20) cheerful 3-note trumpet ──
+function playFanfare() {
+  if (!audioCtx) return;
+  const now = audioCtx.currentTime;
+  // G4 C5 E5 G5 — quick bright stabs
+  const notes = [
+    { freq: 392.0, t: 0.0,  dur: 0.18 },
+    { freq: 523.25,t: 0.18, dur: 0.18 },
+    { freq: 659.25,t: 0.36, dur: 0.18 },
+    { freq: 783.99,t: 0.54, dur: 0.55 },
+  ];
+  notes.forEach(({ freq, t, dur }) => {
+    [1, 2, 3].forEach((harmonic, hi) => {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.value = freq * harmonic;
+      const vol = [0.35, 0.15, 0.07][hi];
+      gain.gain.setValueAtTime(0, now + t);
+      gain.gain.linearRampToValueAtTime(vol, now + t + 0.03);
+      gain.gain.setValueAtTime(vol, now + t + dur - 0.04);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + t + dur);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(now + t);
+      osc.stop(now + t + dur + 0.05);
+    });
+  });
+}
+
+// ── EPIC FANFARE + CROWD CHEER (RM50) ──
+function playEpicFanfare() {
+  if (!audioCtx) return;
+  const now = audioCtx.currentTime;
+
+  // Big triumphant fanfare: C4 E4 G4 C5 — with harmonics
+  const fanfare = [
+    { freq: 261.63, t: 0.0,  dur: 0.2  },
+    { freq: 329.63, t: 0.18, dur: 0.2  },
+    { freq: 392.0,  t: 0.36, dur: 0.2  },
+    { freq: 523.25, t: 0.54, dur: 0.2  },
+    { freq: 659.25, t: 0.72, dur: 0.2  },
+    { freq: 783.99, t: 0.90, dur: 1.2  },
+    { freq: 1046.5, t: 1.0,  dur: 1.1  },
+  ];
+  fanfare.forEach(({ freq, t, dur }) => {
+    [1, 2, 3].forEach((h, hi) => {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = hi === 0 ? 'square' : 'triangle';
+      osc.frequency.value = freq * h;
+      const vol = [0.25, 0.12, 0.06][hi];
+      gain.gain.setValueAtTime(0, now + t);
+      gain.gain.linearRampToValueAtTime(vol, now + t + 0.04);
+      gain.gain.setValueAtTime(vol, now + t + dur - 0.06);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + t + dur);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(now + t);
+      osc.stop(now + t + dur + 0.1);
+    });
+  });
+
+  // Crowd cheer: noise bursts that rise and fall like a wave of whooping
+  const cheerStart = 0.8;
+  for (let i = 0; i < 6; i++) {
+    const buf = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.35, audioCtx.sampleRate);
+    const data = buf.getChannelData(0);
+    for (let j = 0; j < data.length; j++) data[j] = Math.random() * 2 - 1;
+
+    const src = audioCtx.createBufferSource();
+    src.buffer = buf;
+
+    // Band-pass to make it sound like voices
+    const filter = audioCtx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.value = 800 + i * 200;
+    filter.Q.value = 0.5;
+
+    const gain = audioCtx.createGain();
+    const tCheer = now + cheerStart + i * 0.18;
+    gain.gain.setValueAtTime(0, tCheer);
+    gain.gain.linearRampToValueAtTime(0.25, tCheer + 0.08);
+    gain.gain.exponentialRampToValueAtTime(0.001, tCheer + 0.35);
+
+    src.connect(filter);
+    filter.connect(gain);
+    gain.connect(audioCtx.destination);
+    src.start(tCheer);
+  }
+
+  // Sustained crowd roar underneath
+  const noiseBuf = audioCtx.createBuffer(1, audioCtx.sampleRate * 2.5, audioCtx.sampleRate);
+  const noiseData = noiseBuf.getChannelData(0);
+  for (let j = 0; j < noiseData.length; j++) noiseData[j] = Math.random() * 2 - 1;
+  const noiseSrc = audioCtx.createBufferSource();
+  noiseSrc.buffer = noiseBuf;
+  const roarFilter = audioCtx.createBiquadFilter();
+  roarFilter.type = 'bandpass';
+  roarFilter.frequency.value = 600;
+  roarFilter.Q.value = 0.3;
+  const roarGain = audioCtx.createGain();
+  roarGain.gain.setValueAtTime(0, now + cheerStart);
+  roarGain.gain.linearRampToValueAtTime(0.18, now + cheerStart + 0.3);
+  roarGain.gain.setValueAtTime(0.18, now + cheerStart + 1.5);
+  roarGain.gain.exponentialRampToValueAtTime(0.001, now + cheerStart + 2.5);
+  noiseSrc.connect(roarFilter);
+  roarFilter.connect(roarGain);
+  roarGain.connect(audioCtx.destination);
+  noiseSrc.start(now + cheerStart);
+}
+
+// ── PLAY RESULT SOUND BY AMOUNT ──
+function playResultSound(amount) {
+  if (!audioCtx) return;
+  if (amount <= 2) {
+    playSadTrombone();
+  } else if (amount >= 50) {
+    playEpicFanfare();
+  } else {
+    playFanfare();
+  }
+}
+
+function startDrumroll(duration) {
+  if (!audioCtx) return;
+  const now = audioCtx.currentTime;
+  let t = now;
+  const end = now + duration;
+  let interval = 0.22;
+  while (t < end) {
+    const progress = (t - now) / duration;
+    interval = 0.22 - progress * 0.14; // speeds up from 0.22s to 0.08s
+    const vol = 0.3 + progress * 0.5;
+    playDrumTick(t, vol);
+    t += Math.max(interval, 0.07);
+  }
+  // Final rimshot
+  playRimshot(end - 0.05);
+}
+
+function stopDrumroll() {
+  drumNodes.forEach(n => { try { n.stop(); } catch(e) {} });
+  drumNodes = [];
+}
+
+// ── DRAMA SEQUENCE ──
+const dramaLines = [
+  '🤔 Eh, tunggu sekejap...',
+  '🎴 Tengah cabut ni...',
+  '🥁 Dram pun dah bunyi...',
+  '✨ Alamak, suspens gila...',
+  '🔔 Dan yang bertuah ialah...',
+];
+
+let selectedAmount = 0;
+
+function startDrama() {
+  const name = nameInput.value.trim();
+  if (!name) return;
+
+  initAudio();
+  selectedAmount = pickAmount();
+  const overlay = document.getElementById('dramaOverlay');
+  const textEl = document.getElementById('dramaText');
+  overlay.classList.add('active');
+
+  const totalDuration = dramaLines.length * 1.3;
+  startDrumroll(totalDuration - 0.3);
+
+  let i = 0;
+  function showLine() {
+    if (i < dramaLines.length) {
+      textEl.style.animation = 'none';
+      textEl.offsetHeight;
+      textEl.style.animation = 'fadeInOut 1.2s ease forwards';
+      textEl.textContent = dramaLines[i];
+      i++;
+      setTimeout(showLine, 1300);
+    } else {
+      stopDrumroll();
+      overlay.classList.remove('active');
+      setTimeout(() => {
+        playResultSound(selectedAmount);
+        showResult(name, selectedAmount);
+      }, 200);
+    }
+  }
+  showLine();
+}
+
+// ── PICK AMOUNT ──
+function pickAmount() {
+  const notes = config.notes.filter(n => n.qty > 0 && n.prob > 0);
+  if (notes.length === 0) return 10;
+  const totalProb = notes.reduce((s, n) => s + n.prob, 0);
+  let rand = Math.random() * totalProb;
+  for (const n of notes) {
+    rand -= n.prob;
+    if (rand <= 0) return n.value;
+  }
+  return notes[notes.length - 1].value;
+}
+
+// ── MESSAGES (colloquial BM) ──
+const messages = {
+  2:  ['Sikit je tapi rezeki tetap rezeki! 😄', 'Duit raya pun duit raya jugak! 🙏', 'Jangan kira banyak sikit, yang penting ikhlas! 💛'],
+  5:  ['Alhamdulillah! Cukup la tu beli teh tarik! ☕', 'Ala, boleh la beli kuih sikit! 😋', 'Rezeki ada je, syukur! 🌙'],
+  10: ['Eh tak sangka! Boleh shopping sikit dah ni 😏', 'Wah cukup kaya la korang harini! 😂', 'Syukur alhamdulillah, rezeki murah! ✨'],
+  20: ['WEEEE bestnya! Belanja la adik-beradik! 🎉', 'Tak sia-sia mai awal pagi tau! 😎', 'MasyaAllah, mujur betul korang ni!'],
+  50: ['WOOOOOI JACKPOT LAH 🎊🎊🎊', 'ADOIIIII RM50 weh! Belanja semua orang! 🤑', 'Haaa ni la rezeki orang murah hati! MasyaAllah! 🌟'],
+};
+
+// ── SHOW RESULT ──
+function showResult(name, amount) {
+  document.getElementById('resultName').textContent = name;
+  document.getElementById('resultAmount').textContent = 'RM' + amount;
+  const msgs = messages[amount] || ['Selamat Hari Raya! 🌙'];
+  document.getElementById('resultMsg').textContent = msgs[Math.floor(Math.random() * msgs.length)];
+  document.getElementById('sheetStatus').textContent = '';
+  document.getElementById('resultOverlay').classList.add('active');
+
+  launchConfetti();
+  submitToSheets(name, amount);
+}
+
+// ── RESET ──
+function resetAll() {
+  document.getElementById('resultOverlay').classList.remove('active');
+  nameInput.value = '';
+  mainBtn.disabled = true;
+  stopConfetti();
+}
+
+// ── CONFETTI ──
+let confettiAnim;
+function launchConfetti() {
+  const canvas = document.getElementById('confettiCanvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const colors = ['#f5c842', '#c8a8e9', '#ff6b6b', '#2ecc71', '#fff8e7', '#9b59d6', '#3498db'];
+  const particles = Array.from({length: 160}, () => ({
+    x: Math.random() * canvas.width,
+    y: -20,
+    w: Math.random() * 10 + 5,
+    h: Math.random() * 6 + 3,
+    color: colors[Math.floor(Math.random() * colors.length)],
+    speed: Math.random() * 4 + 2,
+    angle: Math.random() * Math.PI * 2,
+    spin: (Math.random() - 0.5) * 0.2,
+    vx: (Math.random() - 0.5) * 3,
+  }));
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.angle);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+      ctx.restore();
+      p.y += p.speed;
+      p.x += p.vx;
+      p.angle += p.spin;
+      if (p.y > canvas.height) { p.y = -20; p.x = Math.random() * canvas.width; }
+    });
+    confettiAnim = requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+function stopConfetti() {
+  cancelAnimationFrame(confettiAnim);
+  const canvas = document.getElementById('confettiCanvas');
+  canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+}
+
+// ── GOOGLE SHEETS SUBMIT ──
+function submitToSheets(name, amount) {
+  const url = config.sheetUrl;
+  const fn = config.fieldName;
+  const fa = config.fieldAmount;
+  const statusEl = document.getElementById('sheetStatus');
+
+  if (!url || !fn || !fa) {
+    statusEl.textContent = '⚠️ Google Sheets belum set lagi (bukak ⚙️ untuk tetapkan).';
+    return;
+  }
+
+  statusEl.textContent = '📤 Tengah hantar data...';
+
+  const formData = new FormData();
+  formData.append(fn, name);
+  formData.append(fa, 'RM' + amount);
+
+  fetch(url, { method: 'POST', body: formData, mode: 'no-cors' })
+    .then(() => {
+      statusEl.textContent = '✅ Dah masuk dalam rekod!';
+    })
+    .catch(() => {
+      statusEl.textContent = '❌ Alamak, tak berjaya. Semak URL form tu.';
+    });
+}
+
+// ── ADMIN PANEL ──
+function toggleAdmin() {
+  document.getElementById('adminPanel').classList.toggle('active');
+  if (document.getElementById('adminPanel').classList.contains('active')) {
+    renderAdminConfig();
+  }
+}
+
+function renderAdminConfig() {
+  const container = document.getElementById('noteConfigs');
+  container.innerHTML = '';
+
+  config.notes.forEach((note, i) => {
+    const div = document.createElement('div');
+    div.className = 'note-config';
+    div.innerHTML = `
+      <div class="note-header">
+        <div class="note-bill ${note.colorClass}">${note.label}</div>
+        <div class="note-name">Duit Kertas ${note.label}</div>
+      </div>
+      <div class="config-row">
+        <div class="config-field">
+          <label>Berapa keping</label>
+          <input type="number" min="0" max="999" class="config-input" id="qty_${i}" value="${note.qty}">
+        </div>
+        <div class="config-field">
+          <label>Peluang (%)</label>
+          <input type="number" min="0" max="100" class="config-input" id="prob_${i}" value="${note.prob}"
+            oninput="updateProbDisplay(${i})">
+          <div class="prob-display" id="probDisp_${i}">${note.prob}% chance</div>
+        </div>
+      </div>
+    `;
+    container.appendChild(div);
+  });
+
+  document.getElementById('sheetUrl').value = config.sheetUrl || '';
+  document.getElementById('fieldName').value = config.fieldName || '';
+  document.getElementById('fieldAmount').value = config.fieldAmount || '';
+}
+
+function updateProbDisplay(i) {
+  const val = document.getElementById('prob_' + i).value;
+  document.getElementById('probDisp_' + i).textContent = val + '% chance';
+}
+
+function saveConfig() {
+  const statusEl = document.getElementById('adminStatus');
+  config.notes.forEach((note, i) => {
+    note.qty = parseInt(document.getElementById('qty_' + i).value) || 0;
+    note.prob = parseFloat(document.getElementById('prob_' + i).value) || 0;
+  });
+  config.sheetUrl = document.getElementById('sheetUrl').value.trim();
+  config.fieldName = document.getElementById('fieldName').value.trim();
+  config.fieldAmount = document.getElementById('fieldAmount').value.trim();
+
+  localStorage.setItem('rayaConfig', JSON.stringify(config));
+  statusEl.className = 'status-msg success';
+  statusEl.textContent = '✅ Dah saved! Oklah tu.';
+  setTimeout(() => { statusEl.className = 'status-msg'; }, 3000);
+}
+</script>
+</body>
+</html>
