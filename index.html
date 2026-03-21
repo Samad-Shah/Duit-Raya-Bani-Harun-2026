@@ -613,7 +613,14 @@ const DEFAULT_CONFIG = {
   fieldAmount: 'entry.1411010503',
 };
 
-let config = JSON.parse(localStorage.getItem('rayaConfig') || 'null') || JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+const _saved = JSON.parse(localStorage.getItem('rayaConfig') || 'null');
+let config = _saved ? {
+  ..._saved,
+  // Always fall back to hardcoded values if saved config has empty sheet settings
+  sheetUrl:    _saved.sheetUrl    || DEFAULT_CONFIG.sheetUrl,
+  fieldName:   _saved.fieldName   || DEFAULT_CONFIG.fieldName,
+  fieldAmount: _saved.fieldAmount || DEFAULT_CONFIG.fieldAmount,
+} : JSON.parse(JSON.stringify(DEFAULT_CONFIG));
 
 // ── STARS ──
 const starsEl = document.getElementById('stars');
@@ -1073,6 +1080,7 @@ function submitToSheets(name, amount) {
   const formData = new FormData();
   formData.append(fn, name);
   formData.append(fa, 'RM' + amount);
+  formData.append('entry.1020755912', ''); // Done QR? — unticked
 
   fetch(url, { method: 'POST', body: formData, mode: 'no-cors' })
     .then(() => {
@@ -1146,6 +1154,6 @@ function saveConfig() {
 }
 </script>
 
-<div style="position:fixed;bottom:8px;right:12px;font-size:0.65rem;color:rgba(232,160,32,0.4);pointer-events:none;z-index:9999;font-family:monospace;">v1.1.1</div>
+<div style="position:fixed;bottom:8px;right:12px;font-size:0.65rem;color:rgba(232,160,32,0.4);pointer-events:none;z-index:9999;font-family:monospace;">v1.1.0</div>
 </body>
 </html>
